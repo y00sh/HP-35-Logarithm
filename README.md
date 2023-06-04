@@ -1,7 +1,36 @@
 # HP-35-Logarithm
 Logarithm function from HP-35 calculator in Vyper
 
-The method for approximating the natural logarithm using a series expansion in this code can be expressed with the following mathematical equations:
+HP-35 was the first device that could do scientific calculations. It was able to do this by overcoming the technology at the time with a solid basis of mathematics and creativity. This could be useful for doing calculations in Ethereum EVM due to the high costs of arithmetic operations. 
+
+Let us first visualize the number we want to take the logarithm of. Let's call it 'M'
+
+This number, M can be broken down as the sum of numbers as the numbers get smaller and approach zero
+
+$$M = A_{0}^{q_{0}} + A_{1}^{q_{1}} + A_{2}^{q_{2}} + A_{3}^{q_{3}} + \ldots + A_{j}^{q_{j}} \enspace eq. 1$$
+
+Visually it would be like this, where the blocks gets smaller and smaller and you can add up all blocks to get M
+<p align="center">
+  <img width="200" height="200" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/8df22aa2-b181-409c-b5ea-15c1198f5f5d">
+</p>
+
+For our algorithm to decrease the block size each iteration $` A_{j} = (1 + 2^{-j}) `$
+
+$$M = (1 + 2^{-1})^{q_{0}} + (1 + 2^{-2})^{q_{1}} + (1 + 2^{-3})^{q_{2}} + (1 + 2^{-4})^{q_{3}} + \ldots + (1 + 2^{-j})^{q_{j}}$$
+
+log product rule says $` \log(M \times N)=\log(M)+log(N) `$ but since $`(1 + 2^{-j}) \approx 1, \log(1)=\log(1 + 2^{-j})`$
+
+$$\log(M \times 1^{j})= \log(M)+\log(A_{0}^{q_{0}})+\log(A_{1}^{q_{1}})+\log(A_{2}^{q_{2}})+\log(A_{3}^{q_{3}})+\ldots+\log(A_{j}^{q_{j}})$$
+
+log exponent rule says $` \log(A_{j}^{q_{j}}=q_{j}\log(A_{j} `$
+
+$$\log(M \times 1^{j})= \log(M)+ q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})$$
+
+To save on computation we can precompute a list for all the values of $`A[j]`$ and all the values of $`\log(A[j])`$
+
+
+
+
 
 1. First, the constants are defined:
 
