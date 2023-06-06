@@ -71,14 +71,29 @@ Remember that we are trying to find the rest of the binary digits. so far we hav
 If M_j < A, that binary digit will be 0.  If M_j < A the digit will be $`\frac{M_j}{A_{j}^{q_j}}`$. We have chosen to solve for logarithm base 2 so $`q_j`$ will only be 1. If we were solving for logarithm base 10 $`q_j`$ would be up to 9. In python/vyper lists start at 0, let's work through the first couple of 'digits'. Remember that $` A_{j} = (1 + 2^{-j}) `$ 
 
 
-$`j`$      $`M_{j-1}`$                  $`M_{j}`$             value.       $`q_j`$
-0           1.929        $`\frac{1.929}{1.5^{q_j}}`$        1.286           0   
+$`j=0`$ $`M_{j-1}=1.929`$ now solve for $`q_0`$ 
+### $\frac{1.929}{1.5^{q_0}}\therefore q_0=1, M=1.286$
+### $\frac{1.286}{1.25^{q_0}}\therefore q_1=1, M=1.286$
+### $\frac{1.929}{1.125^{q_0}}\therefore q_0=1, M=1.286$
+### $\frac{1.929}{1.0625^{q_0}}\therefore q_0=1, M=1.286$
+### $\frac{1.929}{1.03125^{q_0}}\therefore q_0=1, M=1.286$
+### $\frac{1.929}{1.015625^{q_0}}\therefore q_0=1, M=1.286$
+### $\frac{1.929}{A_{j}^{q_0}}\therefore q_0=1, M=1.286$
+
+0           1.929        $`\frac{1.929}{1.5^{q_j}}`$        1.286           0
+
 1           1.286        $`\frac{1.286}{1.25^{q_j}`$        1.0288          1
+
 2           1.0288       $`\frac{1.286}{1.125^{q_j}`$       1.0288          0
+
 3           1.0288       $`\frac{1.286}{1.0625^{q_j}`$      1.0288          0
+
 4           1.0288       $`\frac{1.286}{1.03125^{q_j}`$     1.0288          0
+
 5           1.0288       $`\frac{1.286}{1.015625^{q_j}`$    1.129723076     0
+
 j           M            $`\frac{}{A_{j}^{q_j}}`$                   $`q_0`$
+
 
 
 
