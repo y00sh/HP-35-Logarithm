@@ -22,7 +22,7 @@ log product rule says $` \log(M \times N)=\log(M)+log(N) `$ but since $`(1 + 2^{
 
 $$\log(M \times 1^{j})= \log(M)+\log(A_{0}^{q_{0}})+\log(A_{1}^{q_{1}})+\log(A_{2}^{q_{2}})+\log(A_{3}^{q_{3}})+\ldots+\log(A_{j}^{q_{j}})$$
 
-log exponent rule says $` \log(A_{j}^{q_{j}}=q_{j}\log(A_{j} `$
+log exponent rule says $` \log(A_{j}^{q_{j}})=q_{j}\log(A_{j}) `$
 
 $$\log(M \times 1^{j})= \log(M)+ q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})$$
 
@@ -41,9 +41,9 @@ I took a peak at what [Vyperlang](https://github.com/vyperlang/vyper/pull/2501) 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 |  7  |  6  |  5  |  4  |  3  |  2  |  1  |  0  |
 
-For example if M was 11.1 , we can convert it to $`2^3 + 2^2 + 1.1`$ We have now folded 11.1 to 1.1 and found our value k by adding up the exponents. $`\log(11.1)=\log(2^3)+\log(2^2)+\log(1.1)=3log(2)+3log(2)+log(1.1)=5log(2)+log(1.1)`$
+For example if M was 123.456 , we can convert it to $`2^4 + 2^2 + 1.1`$ We have now folded 123.456 to 1.929 and found our value k by adding up the exponents. $`\log(123.456)=\log(2^4)+\log(2^2)+\log(1.929)=4log(2)+2log(2)+log(1.929)=6log(2)+log(1.929)`$ k=6
 
-The HP-35 uses lookup table to save on computation so instead of computing $`2^7 - 2^0`$ let's create a list and call it. The max number of bits for the integer part is 133 so we only need to check $`2^128`$ since $`2^256`$ would be too big
+The HP-35 uses a lookup table to save on computation so instead of computing $`2^7 - 2^0`$ let's create a list and call it. The max number of bits for the integer part is 133 so we only need to check $`2^{128}`$ since $`2^{256}`$ would be too big
 
 lookup table t
 | 2\^7 | 2\^6 | 2\^5 | 2\^4 | 2\^3 | 2\^2 | 2\^1 | 2\^0 |
@@ -56,15 +56,29 @@ lookup table p
 | 340282366920938463463374607431768211456 | 18446744073709551616 | 4294967296 | 65536 | 256 | 16 | 4 | 2 |
 
 ```python
-n_exp: uint256= 0
+    k: uint256= 0
     t: decimal[8]= [128.0, 64.0 ,32.0 ,16.0 ,8.0 ,4.0 ,2.0 ,1.0]
     p: decimal[8]= [340282366920938463463374607431768211456.0 ,18446744073709551616.0 ,4294967296.0 ,65536.0 ,256.0 ,16.0, 4.0 , 2.0]
     for i in range(8):  
         if M >= p[i]:
             M /= p[i]
-            n_exp += convert(t[i], uint256)
+            k += convert(t[i], uint256)
 ```
-Now implementing the second part Eq. 1 $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})`$ part. We need to find the values $`Q_j`$. It's easier to reason when we look back at this equation, $'M = A_{0}^{q_{0}} + A_{1}^{q_{1}} + A_{2}^{q_{2}} + A_{3}^{q_{3}} + \ldots + A_{j}^{q_{j}}'$ $`q_0`$ can be find by Even though it is only addition
+Now implementing the second part Eq. 1 $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})`$ part. We need to find the values $`Q_j`$. It's easier to reason when we look back at this equation, $`M = A_{0}^{q_{0}} + A_{1}^{q_{1}} + A_{2}^{q_{2}} + A_{3}^{q_{3}} + \ldots + A_{j}^{q_{j}}`$ Even though it is addition the order is very important to find each q
+
+Let's first set M to our remainder after folding it to be between 1-2.  In our last example it was 1.929
+Remember that we are trying to find the rest of the binary digits. so far we have 110._ _ _ _ _ _ _ _ . Now let's find the rest of the digits:
+If M_j < A, that binary digit will be 0.  If M_j < A the digit will be $`\frac{M_j}{A_{j}^{q_j}}`$. We have chosen to solve for logarithm base 2 so $`q_j`$ will only be 1. If we were solving for logarithm base 10 $`q_j`$ would be up to 9. In python/vyper lists start at 0, let's work through the first couple of 'digits'. Remember that $` A_{j} = (1 + 2^{-j}) `$ 
+
+
+$`j`$      $`M_{j-1}`$                  $`M_{j}`$             value.       $`q_j`$
+0           1.929        $`\frac{1.929}{1.5^{q_j}}`$        1.286           0   
+1           1.286        $`\frac{1.286}{1.25^{q_j}`$        1.0288          1
+2           1.0288       $`\frac{1.286}{1.125^{q_j}`$       1.0288          0
+3           1.0288       $`\frac{1.286}{1.0625^{q_j}`$      1.0288          0
+4           1.0288       $`\frac{1.286}{1.03125^{q_j}`$     1.0288          0
+5           1.0288       $`\frac{1.286}{1.015625^{q_j}`$    1.129723076     0
+j           M            $`\frac{}{A_{j}^{q_j}}`$                   $`q_0`$
 
 
 
@@ -73,8 +87,13 @@ Now implementing the second part Eq. 1 $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}
 
 
 
-     
-     \[\ln(M) = \pm (n\ln(2) + \sum_{j=0}^{33} q[j] \ln(A[j]))\]
+
+
+
+
+
+
+$`\[\ln(M) = \pm (n\ln(2) + \sum_{j=0}^{33} q[j] \ln(A[j]))\]`$
      
      
      
