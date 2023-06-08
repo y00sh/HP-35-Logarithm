@@ -26,9 +26,11 @@ log exponent rule says $` \log(A_{j}^{q_{j}})=q_{j}\log(A_{j}) `$ , and $`A_j`$ 
 
 $$\log(M \times 1^{j})= \log(M)+ q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})$$
 
+The Eureka moment is that even though $`A_j`$ approaches 1 as j increases. Henry Briggs in writing lookup tables for his book-Arithmetica Logarithmica (1624)-found that $`\log(1+x) \approx x`$ for example $`\log(1 + 2^{-33})=\log(1 + 0.00000000011641532182) \approx 0.00000000016795180747`$. They both have 9 leading zeros so if $`q_{33}=1`$ there would be a 'digit' at that decimal place.
+
 M could be a large number, let's fold the value M to be between 1-2. If we do that we can revise $`\log(M)=\log(2^k)=k\log(2)`$
 
-$$\log(M)= k\log(2)+ q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j}) \enspace Eq. 1$$
+## $$\log(M)= k\log(2)+ q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j}) \enspace Eq. 1$$
 
 Eq. 1 above can be broken up into two parts and we can think of our answer to $`log(M)`$ as a fixed binary point number with an integer part and decimal part. The $`k\log(2)`$ part will find the integer and if $`\log(M)=\log(2^k)=k\log(2)`$ can't fit into a power of 2 perfectly there'll be a remainder. The remainder part will find the rest of the digits with the $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})`$ part 
 
@@ -64,7 +66,7 @@ lookup table p
             M /= p[i]
             k += convert(t[i], uint256)
 ```
-Now implementing the second part Eq. 1 $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})`$. We need to find the values $`Q_j`$. Remember that even though it's addition, the order is very important to find each q
+Now implementing the second part Eq. 1 $`q_{0}\log(A_{0})+q_{1}\log(A_{1})+q_{2}\log(A_{2}^{q_{3}})+q_{j}\log(A_{3})+\ldots+q_{j}\log(A_{j})`$. We need to find the values $`q_j`$. Remember that even though it's addition, the order is very important to find each q
 
 Let's first set M to our remainder after folding it to be between 1-2.  In our last example it was 1.929
 Remember that we are trying to find the rest of the binary digits. so far we have 110._ _ _ _ _ _ _ _ . Now let's find the rest of the digits:
@@ -105,14 +107,18 @@ We'll find a list of q[] and multiply by our lookup table for $`\log(A_j)`$. To 
 A: decimal[34] = [1.5, 1.25, 1.125, 1.0625, 1.03125, 1.015625, ... , 1.0000000000582076609134674072265625]
 ```
 
-We have a problem. In Vyper the decimal type will truncate everything after 10 decimals. Our last value in list $`A_34`=1.0000000000 This means log(1)=0 and our last digit will be 0 even $`q_34`=1$.  We won't have accuracy in the 8th to 10th decimal place.
+We have a problem. In Vyper the decimal type will truncate everything after 10 decimals. Our last value in list $`A_34`=1.0000000000 This means log(1)=0 and our last digit will be 0 even if $`q_34`=1$. We won't have accuracy in the 8th to 10th decimal place.
 
-The HP-35 calculator went down to 6 decimals when computing the natural logarithm, in our smart contract we are going even further
+The HP-35 calculator went down to 6 decimals for computing the natural logarithm, in our smart contract we are going even further
 <p align="center">
   <img width="400" alt="image" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/fdc50358-99af-4780-ace5-392b5e9d9e2f"
 </p>
   
-Luckily since we are with with fixed point there is a simple solution: we can shift the decimal aka radix point to the right. The integer part of the number will increase and we must ensure we dont overflow. but we now have more information while maintaining our 10 decimals places. Let's wait to shift M until after it is folded to less than 2. This helps avoid overflow since it is now a small value. we can shift M a maximum of $`10^{39}`$ but to get accuracy up to the 10th decimal place we only need to double the number of decimals places we perform arithmetic on, we will shift the fixed point by $`10^{10}`$
+Luckily since we are working with with fixed point, there is a simple solution: we can shift the decimal aka radix point to the right. The integer part of the number will increase and we must ensure we dont overflow. But we now have more information while maintaining our 10 decimals places. Let's wait to shift M until after it is folded to less than 2. This helps avoid overflow since it is a small value. we can shift M a maximum of $`10^{39}`$ -since M<2- but to get accuracy up to the 10th decimal place we only need to double the number of decimals places we perform arithmetic on, we will shift the fixed point by $`10^{10}`$ Before returning the answer shift M back to the original fixed point.  Here's the Vyper code:
+  
+```python
+  
+```
 
 
 
