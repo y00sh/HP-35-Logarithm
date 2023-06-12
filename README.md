@@ -13,9 +13,8 @@ $$M = A_{0}^{q_{0}} + A_{1}^{q_{1}} + A_{2}^{q_{2}} + A_{3}^{q_{3}} + \ldots + A
 
 Visually it would be like this, where the blocks gets smaller and smaller and you can add up all blocks to get M
 <p align="center">
-  <img width="200" height="200" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/8df22aa2-b181-409c-b5ea-15c1198f5f5d">
+  <img width="300" height="300" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/62111959-b3e3-42cf-8aef-f11aaeafb0fa">
 </p>
-
 To decrease the block size each iteration let's use $` A_{j} = (1 + 2^{-j}) `$
 
 $$M = (1 + 2^{-1})^{q_{0}} + (1 + 2^{-2})^{q_{1}} + (1 + 2^{-3})^{q_{2}} + (1 + 2^{-4})^{q_{3}} + \ldots + (1 + 2^{-j})^{q_{j}}$$
@@ -88,9 +87,8 @@ $`j=0`$ $`M_{j-1}=1.929`$ now solve for $`q_0`$ 
 ### $\frac{M_{j-1}}{A_{j}^{q_j}}$
 
 we now have log(123.456)=110.110001... but how many digits do we need? Since Vyper's decimal type has 10 decimals we need 10 digits but how many binary bits ($`q_j`$) is this? we need precision down to 0.0000000001 or $`1\times10^{10}`$. In fixed point the 'decimal' is known as fractional bits
-
 <p align="center">
-  <img width="400" alt="image" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/b4efb17a-528e-4add-8c94-2a5398e6af74">
+  <img width="400" alt="image" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/a0eaf80a-cddc-4553-96eb-33e227cc22b8">
 </p>
 
 $`\frac{1}{2^j}`$ we need to find j where $`\frac{1}{2^j} < 1\times10^{10}`$
@@ -115,6 +113,7 @@ A: decimal[34] = [1.5, 1.25, 1.125, 1.0625, 1.03125, 1.015625, ... , 1.000000000
 We have a problem. In Vyper the decimal type will truncate everything after 10 decimals. Our last value in list $`A_34`=1.0000000000 This means log(1)=0 and our last digit will be 0 even if $`q_34`=1$. We won't have accuracy in the 8th to 10th decimal place.
 
 The HP-35 calculator went down to 6 decimals for computing the natural logarithm, in our smart contract we are going even further
+
 <p align="center">
   <img width="400" alt="image" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/fdc50358-99af-4780-ace5-392b5e9d9e2f"
 </p>
