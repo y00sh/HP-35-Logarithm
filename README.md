@@ -192,7 +192,7 @@ We can also calculate exponents using our logarithm function:
 
 ### $$b^x = 2^{\log_2(b^x)} = 2^{x\log_2(b)}`$$
   
-This code is meant to introduce you interesting mathematical algorithms. Gas savings for users are of greater importance and the HP-35 calculator used lookup tables to minimize computation. It also didn't utilize exponents in our code which are particular expensive. 
+This code is meant to introduce you to interesting mathematical algorithms. Gas savings for users are of greater importance and the HP-35 calculator used lookup tables to minimize computation. It also didn't utilize exponents in our code which are particular expensive. 
 
 to solve for the largest decimal value, 18707220957835557353007165858768422651595.9365500927 had a total gas of 4275
 
