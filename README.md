@@ -13,7 +13,7 @@ $$M = A_{0}^{q_{0}} + A_{1}^{q_{1}} + A_{2}^{q_{2}} + A_{3}^{q_{3}} + \ldots + A
 
 Visually it would be like this, where the blocks gets smaller and smaller and you can add up all blocks to get M
 <p align="center">
-  <img width="300" height="300" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/62111959-b3e3-42cf-8aef-f11aaeafb0fa">
+  <img width="400" height="300" src="https://github.com/y00sh/HP-35-Logarithm/assets/90585099/5a49b581-3cde-43ac-aaa1-6eb02ce5c18a"">
 </p>
 To decrease the block size each iteration let's use $` A_{j} = (1 + 2^{-j}) `$
 
