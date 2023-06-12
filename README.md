@@ -180,7 +180,7 @@ Luckily since we are working with with fixed point, there is a simple solution: 
 ```
 Our $`q = [1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0]`$ 
 
-for every element in $`q`$ that has a 1 we take the corresponding element from the list log2A and add all the elements we pulled together.  The sum will be our answer scaled by $`10^{10}`$
+for every element in $`q`$ that has a 1 we take the corresponding element from the list log2A and add all the elements we pulled together.  The sum will be our answer scaled by $`10^{10}`$. We have found the result digit-by-digit. This approach is also similar to the more famous HP-35 CORDIC algorithm. 
   
 After we scale it back to the original radix point, we now how our fractional bits and the answer is $`\log(123.456) = 6.9478531433`$
 
