@@ -1,7 +1,7 @@
 # HP-35-Logarithm
 Logarithm function from HP-35 calculator in Vyper
 
-HP-35 was the first device that could do scientific calculations. When the calculator was being created they had not yet developed a multiplying unit chip, so that hard could only shift, add and subtract. They got around this by using lookup tables and specialized hardware that could shift in base 10. This could be useful for doing calculations in Ethereum EVM due to the high costs of arithmetic operations.
+HP-35 was the first device that could do scientific calculations. When the calculator was being created they had not yet developed a multiplying unit chip, they could only shift, add and subtract. They got around this by using lookup tables and specialized hardware that could shift in base 10. This could be useful for doing calculations in Ethereum EVM due to the high costs of arithmetic operations.
 
 We will be calculating the logarithm base 2 of a given [decimal](https://docs.vyperlang.org/en/stable/types.html?highlight=decimal#decimals) type in vyper. If you are only solving for a given integer take a look at [snekmate](https://github.com/pcaversaccio/snekmate/tree/main) for a well written vyper contract. 
 
@@ -192,9 +192,11 @@ We can also calculate exponents using our logarithm function:
 
 ### $$b^x = 2^{\log_2(b^x)} = 2^{x\log_2(b)}`$$
   
-This code is meant to introduce you interesting mathematical algorithms. Smart contracts aren't completely interested in Big 0 notation since the agruments are bounded. Gas savings for users are of greater importance and the HP-35 calculator used lookup tables to minimize computation. It also didn't utilize exponents in our code which are particular expensive. 
+This code is meant to introduce you interesting mathematical algorithms. Gas savings for users are of greater importance and the HP-35 calculator used lookup tables to minimize computation. It also didn't utilize exponents in our code which are particular expensive. 
 
-the current proposal to have a builtin log base 2 function in vyper is [here](https://github.com/vyperlang/vyper/pull/2501). 
+to solve for the largest decimal value, 18707220957835557353007165858768422651595.9365500927 had a total gas of 4275
+
+#the current proposal to have a builtin log base 2 function in vyper is [here](https://github.com/vyperlang/vyper/pull/2501)
   
   
   
